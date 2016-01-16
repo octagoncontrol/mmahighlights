@@ -1,7 +1,5 @@
 
 
-
-
 (* Basic Content Scraper - Youtube *)
 
 
@@ -38,3 +36,26 @@ let HighlightSources : HighlightSource list =
      KSW,       (YouTube "https://www.youtube.com/user/KSW")
      BAMMA,     (YouTube "https://www.youtube.com/user/BAMMAUK")
   ]
+
+
+
+
+// Crack the secrets file for the API Key value
+// Hit up the API and start listing out videos?
+
+
+
+
+// Chew through a list of feeds creating highlight playlists for each
+  // pull up likes
+  // synthesize
+  // invidual filter [later]
+
+// Pull fan videos
+
+// Allow direct submissions
+  // Of youtube videos
+  // Of videos for access on the youtube channel
+    // (tagged with producer for approval?)
+  // Consider alternative hosting solutions here?
+    // Essentially watchseries, plus plus

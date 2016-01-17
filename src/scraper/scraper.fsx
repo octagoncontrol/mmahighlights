@@ -29,6 +29,7 @@
 open System
 open System.IO
 open FSharp.Data
+open FSharp.Data.JsonExtensions
 open Google.Apis
 open Google.Apis.Auth.OAuth2
 open Google.Apis.Services
@@ -37,15 +38,15 @@ open Google.Apis.YouTube.v3
 open Google.Apis.YouTube.v3.Data
 
 
+type Settings = JsonProvider<"secrets.json">
+let settings = Settings.Load("secrets.json")
+
 
 
 // Youtube integration
 
-printf "\r\n\r\n"
-
-let youtube = new YouTubeService(new BaseClientService.Initializer())
-youtube.ApiKey = "hey"
-youtube.ApplicationName = "Highlight Service"
+let init = new BaseClientService.Initializer(ApiKey = settings.Youtube.ClientId) // missing application name "highlight service"
+let youtube = new YouTubeService(init)
 
 
 let searchListRequest = youtube.Search.List("snippet,statistics")
@@ -57,9 +58,9 @@ searchListRequest.MaxResults = new Nullable<int64>(50L)
 
 let searchListResponse =
     async {
-        let response = searchListRequest.ExecuteAsync().Result
-        printf "%O" response
-    }
+        let response = searchListRequest.ExecuteAsync()
+        printf "%A" response
+    } |> Async.RunSynchronously
 
 
 // Highlights

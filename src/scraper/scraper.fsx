@@ -7,17 +7,27 @@
 
 
 
-open System
-open System.IO
-
 #I "packages"
+#I "packages/Google.Apis/lib/net40/"
+#I "packages/Google.Apis/lib/portable-net40+sl50+win+wpa81+wp80/"
+#I "packages/Google.Apis.Core/lib/portable-net40+sl50+win+wpa81+wp80/"
+#I "packages/Newtonsoft.Json/lib/portable-net40+sl5+wp80+win8+wpa81/"
+#I "packages/Microsoft.Net.Http/lib/portable-net45+win8+wpa81/"
+
 #r "Fsharp.Data/lib/portable-net40+sl5+wp8+win8/FSharp.Data.dll"
+#r "Zlib.Portable/lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll"
+#r "Newtonsoft.Json/lib/portable-net40+sl5+wp80+win8+wpa81/Newtonsoft.Json.dll"
+#r "log4net/lib/net40-full/log4net.dll"
 #r "Google.Apis/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.dll"
-#r "Google.Apis.Auth/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.Auth.dll"
 #r "Google.Apis.Core/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.Core.dll"
+#r "Google.Apis.Auth/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.Auth.dll"
 #r "Google.Apis.YouTube.v3/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.YouTube.v3.dll"
 
 
+
+
+open System
+open System.IO
 open FSharp.Data
 open Google.Apis
 open Google.Apis.Auth.OAuth2
@@ -31,6 +41,7 @@ open Google.Apis.YouTube.v3.Data
 
 // Youtube integration
 
+printf "\r\n\r\n"
 
 let youtube = new YouTubeService(new BaseClientService.Initializer())
 youtube.ApiKey = "hey"
@@ -43,6 +54,12 @@ searchListRequest.ChannelId = "UCnkMTsKYqhHm6l6GQzg4szg"
 searchListRequest.Q = ""
 searchListRequest.MaxResults = new Nullable<int64>(50L)
 
+
+let searchListResponse =
+    async {
+        let response = searchListRequest.ExecuteAsync().Result
+        printf "%O" response
+    }
 
 
 // Highlights

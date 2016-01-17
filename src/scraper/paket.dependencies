@@ -1,6 +1,7 @@
 
     source https://nuget.org/api/v2
     nuget FSharp.Data
+    nuget Microsoft.Net.Http
     nuget Google.Apis
     nuget Google.Apis.Auth
     nuget Google.Apis.YouTube.v3

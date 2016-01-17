@@ -4,8 +4,8 @@ NUGET
     BouncyCastle (1.7.0) - framework: >= net40
     FSharp.Data (2.2.5)
       Zlib.Portable (>= 1.10.0) - framework: portable-net40+sl50+wp80+win80
-    Google.Apis (1.10.0)
-      Google.Apis.Core (>= 1.10.0)
+    Google.Apis (1.9.2)
+      Google.Apis.Core (>= 1.9.2)
       log4net (>= 2.0.3) - framework: >= net40
       Zlib.Portable.Signed (>= 1.11.0)
     Google.Apis.Auth (1.10.0)
@@ -17,9 +17,9 @@ NUGET
       Microsoft.Bcl.Build (>= 1.0.21)
       Microsoft.Net.Http (>= 2.2.29)
       Newtonsoft.Json (>= 7.0.1)
-    Google.Apis.YouTube.v3 (1.10.0.1590)
-      Google.Apis (>= 1.10.0)
-      Google.Apis.Auth (>= 1.10.0)
+    Google.Apis.YouTube.v3 (1.9.2.1540)
+      Google.Apis (>= 1.9.2)
+      Google.Apis.Auth (>= 1.9.2)
     log4net (2.0.5) - framework: >= net40
     Microsoft.Bcl (1.1.10)
       Microsoft.Bcl.Build (>= 1.0.14)

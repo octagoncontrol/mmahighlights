@@ -9,7 +9,6 @@
 
 
 #I "packages/Google.Apis/lib/net40/"
-//#I "packages/Google.Apis/lib/portable-net40+sl50+win+wpa81+wp80/"
 #I "packages/Google.Apis.Core/lib/portable-net40+sl50+win+wpa81+wp80/"
 #I "packages/Newtonsoft.Json/lib/portable-net40+sl5+wp80+win8+wpa81/"
 #I "packages/Microsoft.Net.Http/lib/portable-net45+win8+wpa81/"
@@ -79,20 +78,16 @@ type HighlightRepo() =
 
 
 
-
-
 // Youtube integration
 
 let init = new BaseClientService.Initializer(ApiKey = settings.YouTube.ClientSecret) // missing application name "highlight service"
 let youtube = new YouTubeService(init)
 
-
-let searchListRequest = youtube.Search.List("snippet,statistics")
-searchListRequest.Fields = "items(id,snippet,statistics)"
+let searchListRequest = youtube.Search.List("id")
+searchListRequest.Fields = "statistics"
 searchListRequest.ChannelId = "UCnkMTsKYqhHm6l6GQzg4szg"
 searchListRequest.Q = ""
 searchListRequest.MaxResults = new Nullable<int64>(50L)
-
 
 let searchListResponse =
     async {

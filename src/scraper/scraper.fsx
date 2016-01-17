@@ -23,6 +23,8 @@
 #r "Google.Apis.Core/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.Core.dll"
 #r "Google.Apis.Auth/lib/net40/Google.Apis.Auth.dll"
 #r "Google.Apis.YouTube.v3/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.YouTube.v3.dll"
+#r "Microsoft.Bcl.Async/lib/net40/Microsoft.Threading.Tasks.dll"
+#r "Microsoft.Bcl.Async/lib/net40/Microsoft.Threading.Tasks.Extensions.dll"
 #r "Octokit/lib/net45/Octokit.dll"
 
 
@@ -81,7 +83,7 @@ type HighlightRepo() =
 
 // Youtube integration
 
-let init = new BaseClientService.Initializer(ApiKey = settings.YouTube.ClientId) // missing application name "highlight service"
+let init = new BaseClientService.Initializer(ApiKey = settings.YouTube.ClientSecret) // missing application name "highlight service"
 let youtube = new YouTubeService(init)
 
 
@@ -94,8 +96,8 @@ searchListRequest.MaxResults = new Nullable<int64>(50L)
 
 let searchListResponse =
     async {
-        let response = searchListRequest.ExecuteAsync()
-        printf "%A" response
+        let response = searchListRequest.ExecuteAsync().Result
+        printf "%O" (response)
     } |> Async.RunSynchronously
 
 

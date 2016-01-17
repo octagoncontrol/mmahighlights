@@ -1,38 +1,51 @@
-(*
 
-    Basic Content Scraper - Youtube
+//
 
-*)
+//    Basic Content Scraper - Youtube
+
+//
 
 
-// Self contained reference management - paket
 
 open System
 open System.IO
 
-Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
+#I "packages"
+#r "Fsharp.Data/lib/portable-net40+sl5+wp8+win8/FSharp.Data.dll"
+#r "Google.Apis/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.dll"
+#r "Google.Apis.Auth/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.Auth.dll"
+#r "Google.Apis.Core/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.Core.dll"
+#r "Google.Apis.YouTube.v3/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.YouTube.v3.dll"
 
-if not (File.Exists "paket.exe") then
-    let url = "https://github.com/fsprojects/Paket/releases/download/2.44.4/paket.exe"
-    use wc = new Net.WebClient()
-    let tmp = Path.GetTempFileName()
-    wc.DownloadFile(url, tmp);
-    File.Move(tmp,Path.GetFileName url)
 
-#r "paket.exe"
-
-Paket.Scripting.Install """
-    source https://nuget.org/api/v2
-    nuget Suave 0.16.0
-    nuget FSharp.Data
-    nuget FSharp.Charting
-""";;
+open FSharp.Data
+open Google.Apis
+open Google.Apis.Auth.OAuth2
+open Google.Apis.Services
+open Google.Apis.Util.Store
+open Google.Apis.YouTube.v3
+open Google.Apis.YouTube.v3.Data
 
 
 
 
+// Youtube integration
 
-//
+
+let youtube = new YouTubeService(new BaseClientService.Initializer())
+youtube.ApiKey = "hey"
+youtube.ApplicationName = "Highlight Service"
+
+
+let searchListRequest = youtube.Search.List("snippet,statistics")
+searchListRequest.Fields = "items(id,snippet,statistics)"
+searchListRequest.ChannelId = "UCnkMTsKYqhHm6l6GQzg4szg"
+searchListRequest.Q = ""
+searchListRequest.MaxResults = new Nullable<int64>(50L)
+
+
+
+// Highlights
 
 
 type MmaSource =

@@ -5,3 +5,4 @@
     nuget Google.Apis
     nuget Google.Apis.Auth
     nuget Google.Apis.YouTube.v3
+    nuget Octokit

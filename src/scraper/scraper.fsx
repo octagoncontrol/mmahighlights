@@ -7,26 +7,28 @@
 
 
 
-#I "packages"
+
 #I "packages/Google.Apis/lib/net40/"
-#I "packages/Google.Apis/lib/portable-net40+sl50+win+wpa81+wp80/"
+//#I "packages/Google.Apis/lib/portable-net40+sl50+win+wpa81+wp80/"
 #I "packages/Google.Apis.Core/lib/portable-net40+sl50+win+wpa81+wp80/"
 #I "packages/Newtonsoft.Json/lib/portable-net40+sl5+wp80+win8+wpa81/"
 #I "packages/Microsoft.Net.Http/lib/portable-net45+win8+wpa81/"
+#I "packages"
 
-#r "Fsharp.Data/lib/portable-net40+sl5+wp8+win8/FSharp.Data.dll"
+#r "Fsharp.Data/lib/net40/FSharp.Data.dll"
 #r "Zlib.Portable/lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll"
 #r "Newtonsoft.Json/lib/portable-net40+sl5+wp80+win8+wpa81/Newtonsoft.Json.dll"
 #r "log4net/lib/net40-full/log4net.dll"
-#r "Google.Apis/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.dll"
+#r "Google.Apis/lib/net40/Google.Apis.dll"
 #r "Google.Apis.Core/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.Core.dll"
-#r "Google.Apis.Auth/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.Auth.dll"
+#r "Google.Apis.Auth/lib/net40/Google.Apis.Auth.dll"
 #r "Google.Apis.YouTube.v3/lib/portable-net40+sl50+win+wpa81+wp80/Google.Apis.YouTube.v3.dll"
-
+#r "Octokit/lib/net45/Octokit.dll"
 
 
 
 open System
+open System.Runtime
 open System.IO
 open FSharp.Data
 open FSharp.Data.JsonExtensions
@@ -36,6 +38,8 @@ open Google.Apis.Services
 open Google.Apis.Util.Store
 open Google.Apis.YouTube.v3
 open Google.Apis.YouTube.v3.Data
+open Octokit
+
 
 
 type Settings = JsonProvider<"secrets.json">
@@ -43,9 +47,41 @@ let settings = Settings.Load("secrets.json")
 
 
 
+type HighlightRepo() =
+
+    let repoOwner, repoName = "octogoncontrol", "mmahighlights"
+    
+    let github = new Octokit.GitHubClient(
+                            new ProductHeaderValue("HighlightPublishing"), 
+                            Credentials = new Credentials(settings.GitHub.ClientSecret))   
+    let repo = github.Repository.Content
+
+    member private this.GetInfo filePath =
+        let contents = 
+            async { return repo.GetAllContents(repoOwner, repoName, filePath).Result } 
+            |> Async.RunSynchronously 
+        contents.[0]
+
+    member this.Get filePath = (this.GetInfo filePath).Content |> Convert.FromBase64String
+
+    member this.Update filePath encodedFileContents = 
+        let targetFileInfo = this.GetInfo filePath
+            
+        let update = new UpdateFileRequest("Highlight auto update", encodedFileContents, targetFileInfo.Sha, 
+                                           Committer = new Committer("Highlight Automation", "mmahighlights@example.com", new DateTimeOffset(DateTime.Now)))
+
+        let updatedContent =  
+            async { return repo.UpdateFile(repoOwner, repoName, filePath, update).Result } 
+            |> Async.RunSynchronously
+        ()
+
+
+
+
+
 // Youtube integration
 
-let init = new BaseClientService.Initializer(ApiKey = settings.Youtube.ClientId) // missing application name "highlight service"
+let init = new BaseClientService.Initializer(ApiKey = settings.YouTube.ClientId) // missing application name "highlight service"
 let youtube = new YouTubeService(init)
 
 
@@ -61,6 +97,14 @@ let searchListResponse =
         let response = searchListRequest.ExecuteAsync()
         printf "%A" response
     } |> Async.RunSynchronously
+
+
+
+
+// grab some highlights from youtube
+// push their info to a JSON file
+
+
 
 
 // Highlights

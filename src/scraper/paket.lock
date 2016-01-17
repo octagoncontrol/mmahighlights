@@ -30,5 +30,7 @@ NUGET
       Microsoft.Bcl (>= 1.1.10)
       Microsoft.Bcl.Build (>= 1.0.14)
     Newtonsoft.Json (8.0.2)
+    Octokit (0.17.0)
+      Microsoft.Net.Http
     Zlib.Portable (1.11.0) - framework: portable-net40+sl50+wp80+win80
     Zlib.Portable.Signed (1.11.0)

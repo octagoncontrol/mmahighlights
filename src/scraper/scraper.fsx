@@ -31,7 +31,6 @@
 open System
 open System.Runtime
 open System.IO
-open System.IO.Path
 open FSharp.Data
 open FSharp.Data.JsonExtensions
 open Google.Apis
@@ -104,20 +103,16 @@ let highlights =
     |> String.concat "\r\n"
 
 
-let repo = new HighlighRepo()
+let repo = new HighlightRepo()
 let localWorkingFile = Path.Combine(__SOURCE_DIRECTORY__, Path.GetRandomFileName())
 
-File.WriteAllLines(localWorkingFile, highlights);
+//try
+File.WriteAllText(localWorkingFile, "[ " + highlights + " ]")
 
-repo.Update @"registries/daar/data/export/eutro.xls" encodedFile
+repo.Update @"data/highlights/testing.json" localWorkingFile
 
-File.Delete(localWorkingFile)
-
-
-
-
-
-
+//finally
+//    File.Delete(localWorkingFile)
 
 
 // grab some highlights from youtube

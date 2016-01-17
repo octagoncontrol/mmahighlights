@@ -31,6 +31,7 @@
 open System
 open System.Runtime
 open System.IO
+open System.IO.Path
 open FSharp.Data
 open FSharp.Data.JsonExtensions
 open Google.Apis
@@ -83,17 +84,38 @@ type HighlightRepo() =
 let init = new BaseClientService.Initializer(ApiKey = settings.YouTube.ClientSecret) // missing application name "highlight service"
 let youtube = new YouTubeService(init)
 
-let searchListRequest = youtube.Search.List("id")
-searchListRequest.Fields = "statistics"
-searchListRequest.ChannelId = "UCnkMTsKYqhHm6l6GQzg4szg"
-searchListRequest.Q = ""
-searchListRequest.MaxResults = new Nullable<int64>(50L)
+let searchListRequest = youtube.Search.List("id,snippet")
+//searchListRequest.Fields <- "snippet,statistics"
+searchListRequest.ChannelId <- "UCnkMTsKYqhHm6l6GQzg4szg"
+searchListRequest.Q <- "Highlights"
+searchListRequest.MaxResults <- new Nullable<int64>(50L)
 
-let searchListResponse =
-    async {
-        let response = searchListRequest.ExecuteAsync().Result
-        printf "%O" (response)
-    } |> Async.RunSynchronously
+let response = searchListRequest.ExecuteAsync().Result
+
+type Highlight = { Title : string; VideoId : string; }
+with member x.ToJson() = sprintf """{ "title" : "%s", "videoid" : "%s" }""" x.Title x.VideoId
+
+
+
+let highlights = 
+    response.Items
+    |> Seq.map (fun result -> { Title = result.Snippet.Title; VideoId = result.Id.VideoId } )
+    |> Seq.map (fun highlight -> highlight.ToJson())
+    |> String.concat "\r\n"
+
+
+let repo = new HighlighRepo()
+let localWorkingFile = Path.Combine(__SOURCE_DIRECTORY__, Path.GetRandomFileName())
+
+File.WriteAllLines(localWorkingFile, highlights);
+
+repo.Update @"registries/daar/data/export/eutro.xls" encodedFile
+
+File.Delete(localWorkingFile)
+
+
+
+
 
 
 

@@ -1,8 +1,8 @@
 'use strict';
 
 // Dentists controller
-angular.module('mmahighlights').controller('HomeCtrl', ['$scope', '$stateParams', '$http',
-	function($scope, $stateParams, $http) {
+angular.module('mmahighlights').controller('HomeCtrl', ['$scope', '$stateParams', '$http', '$sce',
+	function($scope, $stateParams, $http, $sce) {
 		$scope.helloWorld = 'hello world';
 
 		$http({
@@ -10,10 +10,14 @@ angular.module('mmahighlights').controller('HomeCtrl', ['$scope', '$stateParams'
 			url: '/data/testing.json'
 		}).then(function(response) {
 			console.log(response);
-		}, function(error) {
-			console.log(error);
+			$scope.videos = response.data.slice(0,5);
+		}, function(response) {
+			console.log(response);
 		});
 
+		$scope.trustUrl = function(url) {
+			return $sce.trustAsResourceUrl(url);
+		};
 
 	}
 ]);

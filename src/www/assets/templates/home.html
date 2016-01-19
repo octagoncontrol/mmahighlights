@@ -1,1 +1,25 @@
-{{helloWorld}}
+<section class="container">
+  <div class="jumbotron text-center">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12">
+      <h1>MMA HIGHLIGHTS</h1>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <p class="lead">
+        ;)
+      </p>
+    </div>
+  </div>
+  <div>
+  </div>
+  <div class="row">
+    <div class="col-md-offset-2 col-md-8">
+	    <div ng-repeat="video in videos">
+	    	<h1>Video</h1>
+	    	<iframe src="{{trustUrl('http://www.youtube.com/embed/' + video.videoid)}}" id="ytplayer" type="text/html" width="640" height="390"></iframe>
+	    </div>
+    </div>
+  </div>
+</section>
